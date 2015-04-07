@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "authtutorial/models"
-	_ "authtutorial/routers"
+	_ "Go_authentication/authtutorial/models"
+	_ "Go_authentication/authtutorial/routers"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"

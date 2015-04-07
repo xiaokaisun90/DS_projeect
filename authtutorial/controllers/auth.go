@@ -2,7 +2,7 @@
 package controllers
 
 import (
-	"authtutorial/models"
+	"Go_authentication/authtutorial/models"
 	// "authtutorial/utils"
 	// "github.com/OneOfOne/go-utils"
 	"fmt"
@@ -11,17 +11,14 @@ import (
 	"github.com/astaxie/beego/validation"
 	_ "github.com/go-sql-driver/mysql"
 )
+var sessionName = beego.AppConfig.String("SessionName")
 
 type LoginController struct {
 	beego.Controller
 }
 
 func (this *LoginController) RegisterView() {
-	// o := orm.NewOrm()
-	// o.Using("default")
-	// user := models.User{Username: "slene"}
-	// id, err := o.Insert(&user)
-	// fmt.Printf("ID: %d, ERR: %v\n", id, err)
+
 	this.TplNames = "register.html"
 }
 
@@ -57,3 +54,51 @@ func (this *LoginController) Register() {
 	}
 	this.TplNames = "register.html"
 }
+func (this *LoginController) LoginView() {
+
+	this.TplNames = "login.html"
+}
+func (this *LoginController) Login() {
+	username := this.GetString("username")
+	password := this.GetString("password")
+
+	o := orm.NewOrm()
+	user := models.User{Username:username, Password:password}
+
+	err := o.Read(&user,"Username", "Password")
+	fmt.Println(err)
+	if err == orm.ErrNoRows {
+	    fmt.Println("No result found.")
+		this.Redirect("/login", 302)
+	} else {
+	    fmt.Println(user.Password, user.Username)
+	    this.Redirect("/", 302)
+	}
+
+
+
+	// var user models.User
+	// if VerifyUser(&user, username, password) {
+	// 	v := this.GetSession(sessionName)
+	// 	if v == nil {
+	// 		this.SetSession(sessionName, user.Id)
+	// 	}
+	// 	this.Redirect("/index", 302)
+
+	// } else {
+	// 	this.Redirect("/register", 302)
+	// }
+
+}
+
+// func VerifyUser(user *models.User, username, password string) (success bool) {
+// 	// search user by username or email
+// 	if HasUser(user, username) == false {
+// 		return
+// 	}
+// 	if password == user.Password {
+// 		// success
+// 		success = true
+// 	}
+// 	return
+// }
